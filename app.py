@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def index():
-    return jsonify({"status": "working", "message": "Hey homelab!"})
+    return jsonify({"status": "testing", "message": "Auto-deploy complete!"})
 
 @app.route("/db-test", methods=["GET"])
 def dtbase():
