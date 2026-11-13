@@ -34,5 +34,3 @@ def dtbase():
     except Exception as e:
         return jsonify({"database": "error", "details": str(e)}), 500
 
-if __name__ == '__main__':
-    app.run(host='10.0.2.15', port=5000)
