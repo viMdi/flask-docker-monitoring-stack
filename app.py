@@ -1,12 +1,13 @@
 import os
 from dotenv import load_dotenv
 import psycopg2
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
+
 app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def index():
-    return jsonify({"status": "RUNNING", "message": "Auto-deploy complete!"})
+   return render_template("index.html")
 
 @app.route("/db-test", methods=["GET"])
 def dtbase():
