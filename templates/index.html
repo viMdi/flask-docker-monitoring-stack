@@ -109,11 +109,15 @@
         <p class="subtitle">Мониторинг доступности сайтов и SSL-сертификатов для бизнеса</p>
 
         <form class="search-box" action="/" method="post">
-            <input type="text" name="url" required placeholder="Введите адрес сайта (например, google.com)">
+            <input type="text" name="url" value="{{ url or '' }}" required placeholder="Введите адрес сайта (например, google.com)">
             <button type="submit">Проверить</button>
         </form>
 
-        <div id="result" style="margin-top: 20px;"></div>
+        <div id="result" style="margin-top: 20px;">
+            {% if result %}
+                <p>Результат: {{ result }}</p>
+            {% endif %}
+        </div>
 
         <div class="features">
             <div class="feature-card">

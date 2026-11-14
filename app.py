@@ -13,7 +13,12 @@ def index():
     url = None
 
     if request.method == "POST":
-        url = request.form.get("url")
+        url = (
+            request.form.get("url", "")
+            .strip()
+            .replace("https://", "")
+            .replace("http://", "")
+        )
         if url:
             try:
                 response = requests.get("https://" + url, timeout=5)
