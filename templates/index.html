@@ -107,11 +107,13 @@
     <main class="hero">
         <h1>Узнайте о сбое раньше клиентов</h1>
         <p class="subtitle">Мониторинг доступности сайтов и SSL-сертификатов для бизнеса</p>
-        
-        <div class="search-box">
-            <input type="text" placeholder="Введите адрес сайта (например, google.com)">
-            <button>Проверить</button>
-        </div>
+
+        <form class="search-box" action="/" method="post">
+            <input type="text" name="url" required placeholder="Введите адрес сайта (например, google.com)">
+            <button type="submit">Проверить</button>
+        </form>
+
+        <div id="result" style="margin-top: 20px;"></div>
 
         <div class="features">
             <div class="feature-card">
