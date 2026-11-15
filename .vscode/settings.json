@@ -1,5 +1,5 @@
 {
-	"files.autoSave": true,
+	"files.autoSave": "afterDelay",
 	"workbench.colorTheme": "One Dark Pro Monokai Darker",
 	"workbench.iconTheme": "material-icon-theme",
 	"material-icon-theme.hidesExplorerArrows": true,
