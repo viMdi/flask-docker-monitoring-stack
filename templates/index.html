@@ -119,6 +119,22 @@
             {% endif %}
         </div>
 
+        {% if history %}
+            <div style="margin-top: 30px; text-align: left;">
+                <h3>Последние проверки</h3>
+                <ul>
+                    {% for row in history %}
+                        <li>
+                            <strong>{{ row[0] }}</strong> —
+                            Код: {{ row[1] if row[1] else 'Нет ответа' }}
+                            ({{ row[2].strftime('%d.%m.%Y %H:%M') }})
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+
         <div class="features">
             <div class="feature-card">
                 <h3>⚡ Мгновенные алерты</h3>
