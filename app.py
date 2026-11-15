@@ -31,9 +31,15 @@ def init_db():
                 url TEXT NOT NULL,
                 status_code INTEGER,
                 is_up BOOLEAN NOT NULL,
+                ip_address VARCHAR(45),
                 created_at TIMESTAMP DEFAULT NOW()
             );
         """)
+        cursor.execute("""
+            ALTER TABLE checks
+      		ADD COLUMN IF NOT EXISTS ip_address VARCHAR(45);
+        """)
+
         conn.commit()
         cursor.close()
         conn.close()
@@ -47,6 +53,7 @@ init_db()
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
+        user_ip = request.headers.get("X-Real-IP", request.remote_addr)
         url = (
             request.form.get("url", "")
             .strip()
@@ -72,8 +79,8 @@ def index():
                 conn = get_db_connection()
                 cursor = conn.cursor()
                 cursor.execute(
-                    "INSERT INTO checks (url, status_code, is_up) VALUES (%s, %s, %s)",
-                    (url, status_code, is_up),
+                    "INSERT INTO checks (url, status_code, is_up, ip_address) VALUES (%s, %s, %s, %s)",
+                    (url, status_code, is_up, user_ip),
                 )
                 conn.commit()
                 cursor.close()
