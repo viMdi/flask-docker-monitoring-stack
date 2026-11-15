@@ -2,41 +2,43 @@ import os
 import psycopg2
 import requests
 from dotenv import load_dotenv
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
 
+load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY", "dev-secret-key-uptimeguard")
 
 
 def get_db_connection():
-	return psycopg2.connect(
-		dbname=os.getenv("DB_NAME"),
-		user=os.getenv("DB_USER"),
-		password=os.getenv("DB_PASSWORD"),
-		host="psqldatabases",
-		port="5432",
-		connect_timeout=3,
-	)
+    return psycopg2.connect(
+        dbname=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        host="psqldatabases",
+        port="5432",
+        connect_timeout=3,
+    )
 
 
 def init_db():
-	try:
-		conn = get_db_connection()
-		cursor = conn.cursor()
-		cursor.execute("""
-			CREATE TABLE IF NOT EXISTS checks (
-				id SERIAL PRIMARY KEY,
-				url TEXT NOT NULL,
-				status_code INTEGER,
-				is_up BOOLEAN NOT NULL,
-				created_at TIMESTAMP DEFAULT NOW()
-			);
-		""")
-		conn.commit()
-		cursor.close()
-		conn.close()
-	except Exception as e:
-		print(f"Database error: {e}")
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS checks (
+                id SERIAL PRIMARY KEY,
+                url TEXT NOT NULL,
+                status_code INTEGER,
+                is_up BOOLEAN NOT NULL,
+                created_at TIMESTAMP DEFAULT NOW()
+            );
+        """)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print(f"Database error: {e}")
 
 
 init_db()
@@ -44,10 +46,6 @@ init_db()
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    result = None
-    url = None
-    history = []
-
     if request.method == "POST":
         url = (
             request.form.get("url", "")
@@ -64,11 +62,11 @@ def index():
 
                 if response.status_code < 400:
                     is_up = True
-                    result = f"Сайт доступен (Код: {response.status_code})"
+                    result = f"Сайт {url} доступен (Код: {response.status_code})"
                 else:
-                    result = f"Ошибка (Код: {response.status_code})"
+                    result = f"Сайт {url} вернул ошибку (Код: {response.status_code})"
             except Exception:
-                result = "Ошибка: сайт недоступен или не существует"
+                result = f"Ошибка: сайт {url} недоступен или не существует"
 
             try:
                 conn = get_db_connection()
@@ -83,6 +81,11 @@ def index():
             except Exception as e:
                 print(f"DB insert error: {e}")
 
+            flash(result)
+
+        return redirect(url_for("index"))
+
+    history = []
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -97,5 +100,20 @@ def index():
     except Exception as e:
         print(f"DB select error: {e}")
 
-    return render_template("index.html", result=result, url=url, history=history)
+    return render_template("index.html", history=history)
 
+
+@app.route("/db-test", methods=["GET"])
+def dtbase():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1;")
+        cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        return jsonify({"database": "connected"})
+
+    except Exception as e:
+        return jsonify({"database": "error", "details": str(e)}), 500
