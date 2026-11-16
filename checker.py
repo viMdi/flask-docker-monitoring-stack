@@ -21,22 +21,22 @@ def is_safe_url(url):
     hostname = parsed.hostname
 
     if not hostname:
-        return False
+        return False, "Некорректный адрес сайта."
 
     try:
         ip_str = socket.gethostbyname(hostname)
     except socket.gaierror:
-        return False
+        return False, "Домен не найден. Проверьте правильность написания."
 
     try:
         ip_obj = ipaddress.ip_address(ip_str)
     except ValueError:
-        return False
+        return False, "Некорректный адрес сайта."
 
     if ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_link_local:
-        return False
+        return False, "Запросы к локальной сети запрещены из соображений безопасности."
 
-    return True
+    return True, None
 
 
 def send_alert(url, status_code, chat_id):
@@ -45,7 +45,7 @@ def send_alert(url, status_code, chat_id):
     if not token or not chat_id:
         return
 
-    api_url = f"https://api.telegram.org/bot{token}/sendMessage"
+    api_url = f"https://telegram.org{token}/sendMessage"
     text = f"🚨 {url} is down! HTTP status: {status_code or 'No response'}"
 
     try:
@@ -72,8 +72,9 @@ def check_all():
         for monitor in monitors:
             monitor_id, url, chat_id = monitor
 
-            if not is_safe_url(url):
-                print(f"[BLOCKED] Unsafe URL: {url}")
+            is_safe, error_msg = is_safe_url(url)
+            if not is_safe:
+                print(f"[BLOCKED] {url} - {error_msg}")
                 continue
 
             status_code = None
