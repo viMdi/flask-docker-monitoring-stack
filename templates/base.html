@@ -53,8 +53,8 @@ nav { height: 72px; display: flex; align-items: center; justify-content: space-b
 .btn-nav { background: var(--text); color: white; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; transition: opacity 0.2s; }
 .btn-nav:hover { opacity: 0.8; }
 
-/* Hero */
-.hero { padding: 80px 0; display: grid; grid-template-columns: 1fr 1.1fr; gap: 60px; align-items: center; }
+/* Hero (Дашборд стал шире) */
+.hero { padding: 80px 0; display: grid; grid-template-columns: 1fr 1.3fr; gap: 60px; align-items: center; }
 .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--bg2); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 20px; }
 .badge-dot { width: 6px; height: 6px; background: var(--accent2); border-radius: 50%; box-shadow: 0 0 8px var(--accent2); }
 .hero h1 { font-size: clamp(32px, 4vw, 48px); font-weight: 800; line-height: 1.15; margin-bottom: 20px; }
@@ -70,14 +70,16 @@ nav { height: 72px; display: flex; align-items: center; justify-content: space-b
 .result.ok { color: var(--accent2); }
 .result.err { color: #ef4444; }
 
-/* Дашборд (Вернул нормальные пропорции) */
+/* Дашборд */
 .dash-card { background: white; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 12px 24px -12px rgba(0,0,0,0.1); overflow: hidden; width: 100%; }
 .dash-topbar { background: var(--bg3); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
 .dash-dots span { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
 .dash-body { padding: 24px; }
-.dash-stats { display: flex; gap: 12px; margin-bottom: 24px; }
-.dash-stat { flex: 1; background: var(--bg2); padding: 14px 12px; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; }
-.dash-stat-label { font-size: 11px; color: var(--text3); font-weight: 600; letter-spacing: 0.02em; margin-bottom: 4px; }
+
+/* Исправленные плашки (Grid + nowrap) */
+.dash-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+.dash-stat { background: var(--bg2); padding: 14px 16px; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+.dash-stat-label { font-size: 11px; color: var(--text3); font-weight: 600; letter-spacing: 0.02em; margin-bottom: 4px; white-space: nowrap; }
 .dash-stat-val { font-size: 16px; font-weight: 800; font-family: 'Outfit'; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
 
 .chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 60px; }
