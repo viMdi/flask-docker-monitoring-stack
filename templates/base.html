@@ -30,7 +30,7 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-h1, h2, h3, h4, .logo { font-family: 'Outfit', sans-serif; letter-spacing: -0.02em; }
+h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; letter-spacing: -0.02em; }
 a { text-decoration: none; color: inherit; }
 .container { max-width: var(--max-w); margin: 0 auto; padding: 0 max(24px, calc((100vw - var(--max-w)) / 2)); }
 .gradient-text { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -45,7 +45,8 @@ a { text-decoration: none; color: inherit; }
 
 /* Навигация */
 nav { height: 72px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); z-index: 100; padding: 0 24px; }
-.logo { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 4px; }
+.logo { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 4px; font-family: 'Outfit', sans-serif; }
+.logo .plus-minus { font-weight: 900; font-size: 18px; }
 .nav-links { display: flex; gap: 24px; }
 .nav-links a { font-size: 14px; color: var(--text2); font-weight: 500; transition: color 0.2s; }
 .nav-links a:hover { color: var(--text); }
@@ -53,7 +54,7 @@ nav { height: 72px; display: flex; align-items: center; justify-content: space-b
 .btn-nav:hover { opacity: 0.8; }
 
 /* Hero */
-.hero { padding: 80px 0; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px; align-items: center; }
+.hero { padding: 80px 0; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 60px; align-items: center; }
 .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--bg2); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 20px; }
 .badge-dot { width: 6px; height: 6px; background: var(--accent2); border-radius: 50%; box-shadow: 0 0 8px var(--accent2); }
 .hero h1 { font-size: clamp(32px, 4vw, 48px); font-weight: 800; line-height: 1.15; margin-bottom: 20px; }
@@ -70,14 +71,14 @@ nav { height: 72px; display: flex; align-items: center; justify-content: space-b
 .result.err { color: #ef4444; }
 
 /* Дашборд */
-.dash-card { background: white; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 12px 24px -12px rgba(0,0,0,0.1); overflow: hidden; }
+.dash-card { background: white; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 12px 24px -12px rgba(0,0,0,0.1); overflow: hidden; width: 100%; }
 .dash-topbar { background: var(--bg3); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
 .dash-dots span { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
 .dash-body { padding: 20px; }
 .dash-stats { display: flex; gap: 12px; margin-bottom: 20px; }
 .dash-stat { flex: 1; background: var(--bg2); padding: 12px; border-radius: 8px; overflow: hidden; }
-.dash-stat-label { font-size: 10px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
-.dash-stat-val { font-size: 18px; font-weight: 800; font-family: 'Outfit'; margin: 2px 0; }
+.dash-stat-label { font-size: 10px; color: var(--text3); font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; }
+.dash-stat-val { font-size: 18px; font-weight: 800; font-family: 'Outfit'; margin: 2px 0; display: flex; align-items: center; gap: 4px;}
 .chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 60px; }
 .chart-bar { flex: 1; background: rgba(16, 185, 129, 0.1); border-radius: 2px 2px 0 0; border-top: 2px solid var(--accent2); }
 
@@ -150,7 +151,12 @@ footer { border-top: 1px solid var(--border); padding: 32px 0; color: var(--text
 </div>
 
 <nav>
-  <a href="/" class="logo">Uptime<span class="gradient-text">Guard</span></a>
+  <!-- Логотип с плюсом и минусом -->
+  <a href="/" class="logo">
+    <span class="gradient-text plus-minus">+</span>
+    Uptime<span style="color: var(--text3);">Guard</span>
+    <span class="gradient-text plus-minus">-</span>
+  </a>
   <div class="nav-links">
     <a href="#features">Возможности</a>
     <a href="#pricing">Тарифы</a>
@@ -178,26 +184,32 @@ footer { border-top: 1px solid var(--border); padding: 32px 0; color: var(--text
       {% endif %}
     </div>
 
+    <!-- Дашборд -->
     <div class="dash-card">
       <div class="dash-topbar">
         <div class="dash-dots"><span style="background:#ef4444"></span><span style="background:#f59e0b"></span><span style="background:#10b981"></span></div>
-        <div style="font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: 0.05em;">UPTIMEGUARD DASHBOARD</div>
+        <div style="font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: 0.05em;">UptimeGuard Dashboard</div>
       </div>
       <div class="dash-body">
         <div class="dash-stats">
           <div class="dash-stat">
             <div class="dash-stat-label">Uptime</div>
-            <div class="dash-stat-val" style="color: var(--accent2);">99.98%</div>
+            <div class="dash-stat-val" style="color: var(--accent2);">
+              <span style="font-size: 12px; font-weight: 700;">+</span> 99.98%
+            </div>
           </div>
           <div class="dash-stat">
-            <div class="dash-stat-label">Response</div>
-            <div class="dash-stat-val">124ms</div>
+            <div class="dash-stat-label">Downtime</div>
+            <div class="dash-stat-val" style="color: var(--accent);">
+              <span style="font-size: 12px; font-weight: 700;">-</span> 0.02%
+            </div>
           </div>
           <div class="dash-stat">
             <div class="dash-stat-label">SSL Days</div>
-            <div class="dash-stat-val" style="color: var(--accent);">45</div>
+            <div class="dash-stat-val">45</div>
           </div>
         </div>
+
         <div style="font-size: 10px; font-weight: 600; color: var(--text3); margin-bottom: 8px;">LATENCY — 7 DAYS</div>
         <div class="chart-bars">
           <div class="chart-bar" style="height: 40%"></div>
