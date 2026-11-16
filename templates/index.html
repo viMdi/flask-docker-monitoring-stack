@@ -158,9 +158,15 @@ footer { border-top: 1px solid var(--border); padding: 40px 0; text-align: cente
       <span class="search-shortcut">Enter ↵</span>
     </form>
 
-    {% if result %}
-    <div style="margin-top: 20px; font-weight: 600; color: {% if 'доступен' in result %}#10B981{% else %}#ef4444{% endif %};">{{ result }}</div>
-    {% endif %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div style="margin-top: 20px; font-weight: 600; color: {% if category == 'error' %}#ef4444{% else %}#10B981{% endif %};">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
   </div>
 </section>
 
