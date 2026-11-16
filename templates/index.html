@@ -1,157 +1,84 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UptimeGuard - Мониторинг доступности сайтов</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://w3.org viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
-    <style>
-        :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg: #f9fafb;
-            --text: #111827;
-            --text-muted: #6b7280;
-            --border: #e5e7eb;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-        header {
-            width: 100%;
-            padding: 20px 40px;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            border-bottom: 1px solid var(--border);
-        }
-        .logo { font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
-        .nav-links a { text-decoration: none; color: var(--text-muted); margin-left: 20px; font-weight: 500; }
-        .hero {
-            text-align: center;
-            margin-top: 80px;
-            max-width: 600px;
-            padding: 0 20px;
-        }
-        h1 { font-size: 48px; margin-bottom: 20px; line-height: 1.2; }
-        p.subtitle { font-size: 20px; color: var(--text-muted); margin-bottom: 40px; }
-        .search-box {
-            display: flex;
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 50px;
-            padding: 8px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        .search-box input {
-            flex: 1;
-            border: none;
-            outline: none;
-            padding: 15px 20px;
-            font-size: 16px;
-            border-radius: 50px;
-            background: transparent;
-        }
-        .search-box button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .search-box button:hover { background: var(--primary-hover); }
-        .features {
-            display: flex;
-            gap: 30px;
-            margin-top: 80px;
-            max-width: 900px;
-            padding: 0 20px;
-        }
-        .feature-card {
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            flex: 1;
-            text-align: left;
-        }
-        .feature-card h3 { margin-top: 0; font-size: 20px; }
-        .feature-card p { color: var(--text-muted); line-height: 1.5; }
-    </style>
-</head>
-<body>
-    <header>
-        <div class="logo">🛡️ UptimeGuard</div>
-        <div class="nav-links">
-            <a href="#">Тарифы</a>
-            <a href="#">Войти</a>
-        </div>
-    </header>
+{% extends "base.html" %}
 
-    <main class="hero">
-        <h1>Узнайте о сбое раньше клиентов</h1>
-        <p class="subtitle">Мониторинг доступности сайтов и SSL-сертификатов для бизнеса</p>
+{% block title %}UptimeGuard — Мониторинг сайтов{% endblock %}
 
-        <form class="search-box" action="/" method="post">
-            <input type="text" name="url" required autocomplete="off" placeholder="Введите адрес сайта (например, google.com)">
-            <button type="submit">Проверить</button>
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto; padding: 80px 24px;">
+    <!-- Hero Section -->
+    <div style="text-align: center; margin-bottom: 80px;">
+        <h1 style="font-size: 56px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 24px; line-height: 1.1;">
+            Узнайте о сбое раньше клиентов
+        </h1>
+        <p style="font-size: 20px; color: var(--text-muted); margin-bottom: 48px; max-width: 600px; margin-left: auto; margin-right: auto;">
+            Мониторинг доступности сайтов и SSL-сертификатов для бизнеса. Получайте алерты в Telegram, когда ваш сайт падает.
+        </p>
+
+        <!-- Форма проверки -->
+        <form action="/" method="POST" style="display: flex; max-width: 500px; margin: 0 auto; gap: 12px;">
+            <input type="text" name="url" required autocomplete="off" placeholder="Введите адрес сайта (например, google.com)"
+                   style="flex: 1; padding: 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 16px; outline: none;">
+            <button type="submit" class="btn" style="padding: 16px 32px; font-size: 16px;">Проверить</button>
         </form>
 
-        <div id="result" style="margin-top: 20px;">
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <p><strong>Результат:</strong> {{ message }}</p>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+        <!-- Результат проверки -->
+        <div style="margin-top: 24px; font-size: 16px;">
+            {% if result %}
+                <span style="color: {% if 'доступен' in result %}green{% else %}red{% endif %}; font-weight: 600;">
+                    {{ result }}
+                </span>
+            {% endif %}
         </div>
+    </div>
 
-        {% if history %}
-            <div style="margin-top: 30px; text-align: left;">
-                <h3>Последние проверки</h3>
-                <ul>
-                    {% for row in history %}
-                        <li>
-                            <strong>{{ row[0] }}</strong> —
-                            Код: {{ row[1] if row[1] else 'Нет ответа' }}
-                            ({{ row[2].strftime('%d.%m.%Y %H:%M') }})
-                        </li>
-                    {% endfor %}
+    <!-- Как это работает -->
+    <div style="border-top: 1px solid var(--border); padding-top: 80px;">
+        <h2 style="text-align: center; font-size: 32px; margin-bottom: 48px;">Как это работает</h2>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;">
+            <div>
+                <div style="font-size: 32px; font-weight: 800; margin-bottom: 16px;">01</div>
+                <h3 style="font-size: 20px; margin-bottom: 12px;">Добавьте сайт</h3>
+                <p style="color: var(--text-muted); line-height: 1.6;">Введите URL вашего сайта в личном кабинете и настройте интервал проверки.</p>
+            </div>
+            <div>
+                <div style="font-size: 32px; font-weight: 800; margin-bottom: 16px;">02</div>
+                <h3 style="font-size: 20px; margin-bottom: 12px;">Мы следим 24/7</h3>
+                <p style="color: var(--text-muted); line-height: 1.6;">Наша система автоматически проверяет ваш сайт каждую минуту и собирает статистику.</p>
+            </div>
+            <div>
+                <div style="font-size: 32px; font-weight: 800; margin-bottom: 16px;">03</div>
+                <h3 style="font-size: 20px; margin-bottom: 12px;">Получайте алерты</h3>
+                <p style="color: var(--text-muted); line-height: 1.6;">Если сайт упал — вы сразу получите уведомление в Telegram и сможете быстро среагировать.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Тарифы -->
+    <div style="border-top: 1px solid var(--border); padding-top: 80px; margin-top: 80px; text-align: center;">
+        <h2 style="font-size: 32px; margin-bottom: 48px;">Простые тарифы</h2>
+        <div style="display: flex; gap: 24px; justify-content: center;">
+            <div style="border: 1px solid var(--border); border-radius: 12px; padding: 32px; width: 300px; text-align: left;">
+                <h3 style="font-size: 20px; margin-bottom: 8px;">Free</h3>
+                <div style="font-size: 36px; font-weight: 800; margin-bottom: 24px;">0 ₽</div>
+                <ul style="list-style: none; color: var(--text-muted); line-height: 2; margin-bottom: 32px;">
+                    <li>✓ 1 сайт</li>
+                    <li>✓ Проверка раз в 5 минут</li>
+                    <li>✓ История за 24 часа</li>
                 </ul>
+                <a href="#" class="btn btn-outline" style="width: 100%; text-align: center;">Начать</a>
             </div>
-        {% endif %}
-
-        <div class="features">
-            <div class="feature-card">
-                <h3>⚡ Мгновенные алерты</h3>
-                <p>Получайте уведомления в Telegram, когда ваш сайт падает. Никаких email, только быстрые мессенджеры.</p>
-            </div>
-            <div class="feature-card">
-                <h3>📊 История и статистика</h3>
-                <p>Смотрите графики падений и время ответа сервера за последние 30 дней.</p>
-            </div>
-            <div class="feature-card">
-                <h3>🔒 Проверка SSL</h3>
-                <p>Мы предупредим вас за 10 дней до истечения сертификата, чтобы ваш сайт не стал "Небезопасным".</p>
+            <div style="border: 2px solid var(--primary); border-radius: 12px; padding: 32px; width: 300px; text-align: left; position: relative;">
+                <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">Популярный</div>
+                <h3 style="font-size: 20px; margin-bottom: 8px;">Pro</h3>
+                <div style="font-size: 36px; font-weight: 800; margin-bottom: 24px;">990 ₽</div>
+                <ul style="list-style: none; color: var(--text-muted); line-height: 2; margin-bottom: 32px;">
+                    <li>✓ 10 сайтов</li>
+                    <li>✓ Проверка раз в минуту</li>
+                    <li>✓ Алерты в Telegram</li>
+                    <li>✓ История за 30 дней</li>
+                </ul>
+                <a href="#" class="btn" style="width: 100%; text-align: center;">Подключить</a>
             </div>
         </div>
-    </main>
-</body>
-</html>
+    </div>
+</div>
+{% endblock %}
