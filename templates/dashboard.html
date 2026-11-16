@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UptimeGuard - Панель управления</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f9fafb;
+            color: #111827;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 24px;
+        }
+        form { display: flex; gap: 10px; flex-wrap: wrap; }
+        input {
+            padding: 10px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            flex: 1;
+        }
+        button {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        button:hover { background: #4338ca; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #e5e7eb; }
+        th { background-color: #f3f4f6; }
+        .nav { margin-bottom: 20px; }
+        .nav a { color: #4f46e5; text-decoration: none; font-weight: 500; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="/">← На главную</a>
+    </div>
+
+    <h1>Мониторинг сайтов (Dashboard)</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: #4f46e5; font-weight: 500;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="card">
+        <h3>Добавить сайт на постоянный мониторинг</h3>
+        <form action="/add_monitor" method="post">
+            <input type="text" name="url" placeholder="Например, google.com" required>
+            <input type="text" name="telegram_chat_id" placeholder="Telegram Chat ID" required>
+            <button type="submit">Добавить</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>Отслеживаемые сайты</h3>
+        {% if monitors %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Сайт (URL)</th>
+                        <th>Telegram Chat ID</th>
+                        <th>Статус</th>
+                        <th>Последняя проверка</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for monitor in monitors %}
+                        <tr>
+                            <td>{{ monitor }}</td>
+                            <td><strong>{{ monitor }}</strong></td>
+                            <td>{{ monitor }}</td>
+                            <td>{{ 'Активен' if monitor else 'Пауза' }}</td>
+                            <td>{{ monitor.strftime('%d.%m.%Y %H:%M') if monitor else 'Еще не проверялся' }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Список пуст. Добавьте первый сайт выше.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

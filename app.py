@@ -40,6 +40,16 @@ def init_db():
       		ADD COLUMN IF NOT EXISTS ip_address VARCHAR(45);
         """)
 
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS monitors (
+                id SERIAL PRIMARY KEY,
+                url TEXT NOT NULL UNIQUE,
+                telegram_chat_id TEXT NOT NULL,
+                is_active BOOLEAN DEFAULT TRUE,
+                last_check TIMESTAMP
+            );
+        """)
+
         conn.commit()
         cursor.close()
         conn.close()
@@ -68,6 +78,54 @@ def send_telegram_alert(url, status_code):
         )
     except Exception as e:
         print(f"Telegram error: {e}")
+
+
+@app.route("/dashboard", methods=["GET"])
+def dashboard():
+    monitors = []
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id, url, telegram_chat_id, is_active, last_check "
+            "FROM monitors ORDER BY id DESC"
+        )
+        monitors = cursor.fetchall()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print(f"DB dashboard select error: {e}")
+
+    return render_template("dashboard.html", monitors=monitors)
+
+
+@app.route("/add_monitor", methods=["POST"])
+def add_monitor():
+    url = (
+        request.form.get("url", "")
+        .strip()
+        .replace("https://", "")
+        .replace("http://", "")
+    )
+    telegram_chat_id = request.form.get("telegram_chat_id", "").strip()
+
+    if url and telegram_chat_id:
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO monitors (url, telegram_chat_id) VALUES (%s, %s)",
+                (url, telegram_chat_id),
+            )
+            conn.commit()
+            cursor.close()
+            conn.close()
+            flash(f"Сайт {url} успешно добавлен в мониторинг!")
+        except Exception as e:
+            print(f"DB add_monitor error: {e}")
+            flash(f"Ошибка: возможно, сайт {url} уже есть в списке.")
+
+    return redirect(url_for("dashboard"))
 
 
 @app.route("/", methods=["GET", "POST"])
