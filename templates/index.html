@@ -180,11 +180,15 @@ footer { border-top: 1px solid var(--border); padding: 32px 0; color: var(--text
         <button type="submit">Проверить</button>
       </form>
 
-      {% if result %}
-      <div class="result {% if 'доступен' in result %}ok{% else %}err{% endif %}">
-        {{ result }}
-      </div>
-      {% endif %}
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="result {% if category == 'success' %}ok{% else %}err{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
     </div>
 
     <div class="dash-card">

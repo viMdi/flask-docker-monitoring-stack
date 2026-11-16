@@ -120,10 +120,10 @@ def add_monitor():
             conn.commit()
             cursor.close()
             conn.close()
-            flash(f"Сайт {url} успешно добавлен в мониторинг!")
+            flash(f"Сайт {url} успешно добавлен в мониторинг!", "success")
         except Exception as e:
             print(f"DB add_monitor error: {e}")
-            flash(f"Ошибка: возможно, сайт {url} уже есть в списке.")
+            flash(f"Ошибка: возможно, сайт {url} уже есть в списке.", "error")
 
     return redirect(url_for("dashboard"))
 
@@ -148,12 +148,15 @@ def index():
                 if response.status_code < 400:
                     is_up = True
                     result = f"Сайт {url} доступен (Код: {response.status_code})"
+                    flash(result, "success") # Зеленая плашка
                 else:
                     result = f"Сайт {url} вернул ошибку (Код: {response.status_code})"
                     send_telegram_alert(url, response.status_code)
+                    flash(result, "error") # Красная плашка
             except Exception:
                 result = f"Ошибка: сайт {url} недоступен или не существует"
                 send_telegram_alert(url, None)
+                flash(result, "error") # Красная плашка
 
             try:
                 conn = get_db_connection()
@@ -167,8 +170,6 @@ def index():
                 conn.close()
             except Exception as e:
                 print(f"DB insert error: {e}")
-
-            flash(result)
 
         return redirect(url_for("index"))
 
