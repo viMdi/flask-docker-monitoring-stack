@@ -24,6 +24,19 @@ services:
       TG_BOT_TOKEN: ${TG_BOT_TOKEN}
       TG_CHAT_ID: ${TG_CHAT_ID}
 
+  worker:
+    image: ghcr.io/vimdi/flask_hlab:latest
+    command: ["python", "checker.py"]
+    depends_on:
+      - psqldatabases
+    environment:
+      DB_HOST: psqldatabases
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      TG_BOT_TOKEN: ${TG_BOT_TOKEN}
+      TG_CHAT_ID: ${TG_CHAT_ID}
+
 
   nginx:
     image: nginx:latest

@@ -141,22 +141,31 @@ def index():
         if url:
             status_code = None
             is_up = False
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) UptimeGuard/1.0"
+            }
+
             try:
-                response = requests.get("https://" + url, timeout=5)
+                try:
+                    response = requests.get("https://" + url, timeout=5, headers=headers)
+
+                except requests.exceptions.RequestException:
+                    response = requests.get("https://" + url, timeout=5, headers=headers)
+
                 status_code = response.status_code
 
                 if response.status_code < 400:
                     is_up = True
                     result = f"Сайт {url} доступен (Код: {response.status_code})"
-                    flash(result, "success") # Зеленая плашка
+                    flash(result, "success") 
                 else:
                     result = f"Сайт {url} вернул ошибку (Код: {response.status_code})"
                     send_telegram_alert(url, response.status_code)
-                    flash(result, "error") # Красная плашка
+                    flash(result, "error")
             except Exception:
                 result = f"Ошибка: сайт {url} недоступен или не существует"
                 send_telegram_alert(url, None)
-                flash(result, "error") # Красная плашка
+                flash(result, "error")
 
             try:
                 conn = get_db_connection()
