@@ -50,6 +50,26 @@ def init_db():
 init_db()
 
 
+def send_telegram_alert(url, status_code):
+    token = os.getenv("TG_BOT_TOKEN")
+    chat_id = os.getenv("TG_CHAT_ID")
+
+    if not token or not chat_id:
+        return
+
+    api_url = f"https://api.telegram.org/bot{token}/sendMessage"
+    text = f"🚨 {url} is down! HTTP status: {status_code or 'No response'}"
+
+    try:
+        requests.post(
+            api_url,
+            json = {"chat_id": chat_id, "text": text},
+            timeout = 5
+        )
+    except Exception as e:
+        print(f"Telegram error: {e}")
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -72,8 +92,10 @@ def index():
                     result = f"Сайт {url} доступен (Код: {response.status_code})"
                 else:
                     result = f"Сайт {url} вернул ошибку (Код: {response.status_code})"
+                    send_telegram_alert(url, response.status_code)
             except Exception:
                 result = f"Ошибка: сайт {url} недоступен или не существует"
+                send_telegram_alert(url, None)
 
             try:
                 conn = get_db_connection()
