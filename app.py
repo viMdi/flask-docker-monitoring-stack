@@ -92,7 +92,7 @@ def send_telegram_alert(url, status_code):
     if not token or not chat_id:
         return
 
-    api_url = f"https://telegram.org{token}/sendMessage"
+    api_url = f"https://api.telegram.org/bot{token}/sendMessage"
     text = f"🚨 {url} is down! HTTP status: {status_code or 'No response'}"
 
     try:
