@@ -53,9 +53,10 @@ nav { height: 72px; display: flex; align-items: center; justify-content: space-b
 .btn-nav { background: var(--text); color: white; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; transition: opacity 0.2s; }
 .btn-nav:hover { opacity: 0.8; }
 
-/* Hero */
-.hero { padding: 80px 0; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 60px; align-items: center; }
-.hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--bg2); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 20px; }
+/* Hero (Сетка выровнена по высоте) */
+.hero { padding: 80px 0; display: grid; grid-template-columns: 1fr 1.1fr; gap: 60px; align-items: stretch; } /* Растягиваем по высоте */
+.hero-left { display: flex; flex-direction: column; justify-content: center; }
+.hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--bg2); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 20px; align-self: flex-start; }
 .badge-dot { width: 6px; height: 6px; background: var(--accent2); border-radius: 50%; box-shadow: 0 0 8px var(--accent2); }
 .hero h1 { font-size: clamp(32px, 4vw, 48px); font-weight: 800; line-height: 1.15; margin-bottom: 20px; }
 .hero-sub { font-size: 16px; color: var(--text2); margin-bottom: 32px; max-width: 480px; }
@@ -70,16 +71,17 @@ nav { height: 72px; display: flex; align-items: center; justify-content: space-b
 .result.ok { color: var(--accent2); }
 .result.err { color: #ef4444; }
 
-/* Дашборд */
-.dash-card { background: white; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 12px 24px -12px rgba(0,0,0,0.1); overflow: hidden; width: 100%; }
+/* Дашборд (Тянется на всю высоту) */
+.dash-card { background: white; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 12px 24px -12px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 100%; width: 100%; }
 .dash-topbar { background: var(--bg3); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
 .dash-dots span { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
-.dash-body { padding: 20px; }
-.dash-stats { display: flex; gap: 12px; margin-bottom: 20px; }
-.dash-stat { flex: 1; background: var(--bg2); padding: 12px; border-radius: 8px; overflow: hidden; }
-.dash-stat-label { font-size: 10px; color: var(--text3); font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; }
-.dash-stat-val { font-size: 18px; font-weight: 800; font-family: 'Outfit'; margin: 2px 0; display: flex; align-items: center; gap: 4px;}
-.chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 60px; }
+.dash-body { padding: 24px; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; }
+.dash-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+.dash-stat { background: var(--bg2); padding: 16px 12px; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; }
+.dash-stat-label { font-size: 11px; color: var(--text3); font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; margin-bottom: 4px; }
+.dash-stat-val { font-size: 16px; font-weight: 800; font-family: 'Outfit'; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.chart-wrap { margin-top: auto; }
+.chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
 .chart-bar { flex: 1; background: rgba(16, 185, 129, 0.1); border-radius: 2px 2px 0 0; border-top: 2px solid var(--accent2); }
 
 /* Секции */
@@ -103,18 +105,18 @@ nav { height: 72px; display: flex; align-items: center; justify-content: space-b
 .sticky-card h3 { font-size: 18px; margin-bottom: 8px; }
 .sticky-card p { color: var(--text2); font-size: 14px; }
 
-/* Тарифы */
-.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 60px 0; }
-.price-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 24px; background: white; position: relative; }
+/* Тарифы (Выравнивание кнопок) */
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 60px 0; align-items: stretch; }
+.price-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 24px; background: white; position: relative; display: flex; flex-direction: column; }
 .price-card.featured { border: 2px solid var(--text); box-shadow: 0 12px 24px -12px rgba(0,0,0,0.1); }
 .featured-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--text); color: white; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 700; white-space: nowrap; }
 .price-plan { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
 .price-amount { font-size: 36px; font-weight: 800; font-family: 'Outfit'; margin-bottom: 20px; display: flex; align-items: baseline; gap: 4px; }
 .price-amount span { font-size: 14px; color: var(--text3); font-weight: 500; }
-.price-features { list-style: none; margin-bottom: 24px; }
+.price-features { list-style: none; margin-bottom: 24px; flex-grow: 1; } /* flex-grow прижимает кнопку вниз */
 .price-features li { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text2); margin-bottom: 10px; }
 .price-features li::before { content: '✓'; color: var(--accent2); font-weight: bold; }
-.price-btn { display: block; width: 100%; text-align: center; padding: 12px; border-radius: 6px; font-weight: 600; font-size: 14px; border: 1px solid var(--border); background: var(--bg2); cursor: pointer; transition: all 0.2s; }
+.price-btn { display: block; width: 100%; text-align: center; padding: 12px; border-radius: 6px; font-weight: 600; font-size: 14px; border: 1px solid var(--border); background: var(--bg2); cursor: pointer; transition: all 0.2s; margin-top: auto; }
 .price-btn.primary { background: var(--text); color: white; border-color: var(--text); }
 .price-btn:hover { border-color: var(--text); }
 
@@ -151,7 +153,6 @@ footer { border-top: 1px solid var(--border); padding: 32px 0; color: var(--text
 </div>
 
 <nav>
-  <!-- Логотип с плюсом и минусом -->
   <a href="/" class="logo">
     <span class="gradient-text plus-minus">+</span>
     Uptime<span style="color: var(--text3);">Guard</span>
@@ -166,8 +167,9 @@ footer { border-top: 1px solid var(--border); padding: 32px 0; color: var(--text
 </nav>
 
 <div class="container">
+  <!-- Hero с оберткой для левой части -->
   <section class="hero">
-    <div>
+    <div class="hero-left">
       <div class="hero-badge"><div class="badge-dot"></div> Мониторинг 24/7</div>
       <h1>Узнайте о сбое<br>раньше <span class="gradient-text">клиентов</span></h1>
       <p class="hero-sub">Мониторинг доступности и SSL-сертификатов для бизнеса. Получайте мгновенные алерты в Telegram, когда ваш сайт падает.</p>
@@ -184,41 +186,45 @@ footer { border-top: 1px solid var(--border); padding: 32px 0; color: var(--text
       {% endif %}
     </div>
 
-    <!-- Дашборд -->
+    <!-- Обновленный дашборд -->
     <div class="dash-card">
       <div class="dash-topbar">
         <div class="dash-dots"><span style="background:#ef4444"></span><span style="background:#f59e0b"></span><span style="background:#10b981"></span></div>
         <div style="font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: 0.05em;">UptimeGuard Dashboard</div>
       </div>
       <div class="dash-body">
-        <div class="dash-stats">
-          <div class="dash-stat">
-            <div class="dash-stat-label">Uptime</div>
-            <div class="dash-stat-val" style="color: var(--accent2);">
-              <span style="font-size: 12px; font-weight: 700;">+</span> 99.98%
+        <div>
+          <div class="dash-stats">
+            <div class="dash-stat">
+              <div class="dash-stat-label">Uptime</div>
+              <div class="dash-stat-val" style="color: var(--accent2);">
+                <span style="font-size: 12px; font-weight: 700;">+</span> 99.98%
+              </div>
+            </div>
+            <div class="dash-stat">
+              <div class="dash-stat-label">Downtime</div>
+              <div class="dash-stat-val" style="color: var(--accent);">
+                <span style="font-size: 12px; font-weight: 700;">-</span> 0.02%
+              </div>
+            </div>
+            <div class="dash-stat">
+              <div class="dash-stat-label">SSL Days</div>
+              <div class="dash-stat-val">45</div>
             </div>
           </div>
-          <div class="dash-stat">
-            <div class="dash-stat-label">Downtime</div>
-            <div class="dash-stat-val" style="color: var(--accent);">
-              <span style="font-size: 12px; font-weight: 700;">-</span> 0.02%
-            </div>
-          </div>
-          <div class="dash-stat">
-            <div class="dash-stat-label">SSL Days</div>
-            <div class="dash-stat-val">45</div>
-          </div>
-        </div>
 
-        <div style="font-size: 10px; font-weight: 600; color: var(--text3); margin-bottom: 8px;">LATENCY — 7 DAYS</div>
-        <div class="chart-bars">
-          <div class="chart-bar" style="height: 40%"></div>
-          <div class="chart-bar" style="height: 60%"></div>
-          <div class="chart-bar" style="height: 35%"></div>
-          <div class="chart-bar" style="height: 80%"></div>
-          <div class="chart-bar" style="height: 50%"></div>
-          <div class="chart-bar" style="height: 90%; background: rgba(255,153,19,0.2); border-top-color: var(--accent);"></div>
-          <div class="chart-bar" style="height: 70%"></div>
+          <div class="chart-wrap">
+            <div style="font-size: 10px; font-weight: 600; color: var(--text3); margin-bottom: 8px;">LATENCY — 7 DAYS</div>
+            <div class="chart-bars">
+              <div class="chart-bar" style="height: 40%"></div>
+              <div class="chart-bar" style="height: 60%"></div>
+              <div class="chart-bar" style="height: 35%"></div>
+              <div class="chart-bar" style="height: 80%"></div>
+              <div class="chart-bar" style="height: 50%"></div>
+              <div class="chart-bar" style="height: 90%; background: rgba(255,153,19,0.2); border-top-color: var(--accent);"></div>
+              <div class="chart-bar" style="height: 70%"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -278,6 +284,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 0; color: var(--text
     </div>
   </section>
 
+  <!-- Тарифы -->
   <section id="pricing">
     <div style="text-align: center; padding-top: 60px;">
       <div class="section-tag">Прозрачные цены</div>
@@ -314,6 +321,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 0; color: var(--text
           <li>Публичная статус-страница</li>
           <li>Проверка API и SSL</li>
           <li>Приоритетная поддержка</li>
+          <li>Персональный менеджер</li> <!-- Добавил строку, чтобы проверить выравнивание -->
         </ul>
         <button class="price-btn">Связаться</button>
       </div>
