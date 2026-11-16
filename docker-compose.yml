@@ -26,10 +26,11 @@ services:
 
   worker:
     image: ghcr.io/vimdi/flask_hlab:latest
-    command: ["python", "checker.py"]
+    command: ["python", "-u", "checker.py"]
     depends_on:
       - psqldatabases
     environment:
+      PYTHONUNBUFFERED: 1
       DB_HOST: psqldatabases
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
