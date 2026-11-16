@@ -25,13 +25,13 @@ def is_safe_url(url):
 
     try:
         ip_str = socket.gethostbyname(hostname)
-    except socket.gaierror:
+    except (socket.gaierror, UnicodeError):
         return False, "Домен не найден. Проверьте правильность написания."
 
     try:
         ip_obj = ipaddress.ip_address(ip_str)
     except ValueError:
-        return False, "Некорректный адрес сайта."
+        return False, "Ошибка при обработке IP-адреса."
 
     if ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_link_local:
         return False, "Запросы к локальной сети запрещены из соображений безопасности."
