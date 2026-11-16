@@ -1,6 +1,5 @@
-import os
-import psycopg2
-import requests
+import os, psycopg2, requests, socket, ipaddress
+from urllib.parse import urlparse
 from dotenv import load_dotenv
 from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
 
@@ -19,6 +18,32 @@ def get_db_connection():
         port="5432",
         connect_timeout=3,
     )
+
+
+def is_safe_url(url):
+    if not url.startswith(("http://", "https://")):
+        url = "http://" + url
+
+    parsed = urlparse(url)
+    hostname = parsed.hostname
+
+    if not hostname:
+        return False
+
+    try:
+        ip_str = socket.gethostbyname(hostname)
+    except socket.gaierror:
+        return False
+
+    try:
+        ip_obj = ipaddress.ip_address(ip_str)
+    except ValueError:
+        return False
+
+    if ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_link_local:
+        return False
+
+    return True
 
 
 def init_db():
@@ -67,7 +92,7 @@ def send_telegram_alert(url, status_code):
     if not token or not chat_id:
         return
 
-    api_url = f"https://api.telegram.org/bot{token}/sendMessage"
+    api_url = f"https://telegram.org{token}/sendMessage"
     text = f"🚨 {url} is down! HTTP status: {status_code or 'No response'}"
 
     try:
@@ -139,6 +164,10 @@ def index():
             .replace("http://", "")
         )
         if url:
+            if not is_safe_url(url):
+                flash("Недопустимый адрес! Запросы к внутренней сети запрещены.", "error")
+                return redirect(url_for("index"))
+
             status_code = None
             is_up = False
             headers = {
@@ -157,7 +186,7 @@ def index():
                 if response.status_code < 400:
                     is_up = True
                     result = f"Сайт {url} доступен (Код: {response.status_code})"
-                    flash(result, "success") 
+                    flash(result, "success")
                 else:
                     result = f"Сайт {url} вернул ошибку (Код: {response.status_code})"
                     send_telegram_alert(url, response.status_code)

@@ -1,4 +1,5 @@
-import os, psycopg2, requests, time
+import os, psycopg2, requests, time, socket, ipaddress
+from urllib.parse import urlparse
 
 
 def get_db_connection():
@@ -12,13 +13,39 @@ def get_db_connection():
     )
 
 
+def is_safe_url(url):
+    if not url.startswith(("http://", "https://")):
+        url = "http://" + url
+
+    parsed = urlparse(url)
+    hostname = parsed.hostname
+
+    if not hostname:
+        return False
+
+    try:
+        ip_str = socket.gethostbyname(hostname)
+    except socket.gaierror:
+        return False
+
+    try:
+        ip_obj = ipaddress.ip_address(ip_str)
+    except ValueError:
+        return False
+
+    if ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_link_local:
+        return False
+
+    return True
+
+
 def send_alert(url, status_code, chat_id):
     token = os.getenv("TG_BOT_TOKEN")
 
     if not token or not chat_id:
         return
 
-    api_url = f"https://api.telegram.org/bot{token}/sendMessage"
+    api_url = f"https://telegram.org{token}/sendMessage"
     text = f"🚨 {url} is down! HTTP status: {status_code or 'No response'}"
 
     try:
@@ -44,6 +71,11 @@ def check_all():
 
         for monitor in monitors:
             monitor_id, url, chat_id = monitor
+
+            if not is_safe_url(url):
+                print(f"[BLOCKED] Unsafe URL: {url}")
+                continue
+
             status_code = None
             is_up = False
 
