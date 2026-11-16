@@ -115,8 +115,8 @@
         <h3>Добавить сайт на мониторинг</h3>
         <p style="color: var(--text2); font-size: 14px; margin-bottom: 20px;">Введите URL и ваш Telegram ID (узнать можно у бота @userinfobot).</p>
         <form action="/add_monitor" method="post">
-            <input type="text" name="url" placeholder="Например, google.com" required>
-            <input type="text" name="telegram_chat_id" placeholder="Telegram Chat ID" required>
+            <input type="text" name="url" placeholder="Например, google.com" autocomplete="off" required>
+            <input type="text" name="telegram_chat_id" placeholder="Telegram Chat ID" autocomplete="off" required>
             <button type="submit" class="btn-submit">Добавить</button>
         </form>
     </div>
