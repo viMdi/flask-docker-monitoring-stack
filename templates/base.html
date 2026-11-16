@@ -3,83 +3,424 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}UptimeGuard{% endblock %}</title>
+    <!-- Фавикон: Белый квадрат с градиентной монограммой UG -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23ffffff'/><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23FF9913'/><stop offset='100%' stop-color='%2310B981'/></linearGradient></defs><text x='50' y='68' font-family='Arial, sans-serif' font-size='48' font-weight='900' text-anchor='middle' fill='url(%23g)'>UG</text></svg>">
+
+    <!-- Шрифт Manrope с поддержкой кириллицы -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --primary: #000000;
             --bg: #ffffff;
-            --text: #000000;
-            --text-muted: #666666;
-            --border: #eaeaea;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent-orange: #FF9913;
+            --accent-green: #10B981;
+            --gradient-brand: linear-gradient(135deg, #FF9913 0%, #10B981 100%);
+            --radius: 12px;
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Manrope', sans-serif;
             background-color: var(--bg);
-            color: var(--text);
+            color: var(--text-main);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
+
+        /* --- Шапка (Header) --- */
         header {
             border-bottom: 1px solid var(--border);
-            padding: 0 24px;
-            height: 64px;
+            height: 72px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(8px);
+            padding: 0 32px;
             position: sticky;
             top: 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
             z-index: 100;
         }
-        .logo { font-weight: 700; font-size: 20px; display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); }
-        .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 14px; margin-left: 24px; font-weight: 500; transition: color 0.2s; }
-        .nav-links a:hover { color: var(--text); }
-        main { flex: 1; }
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 40px 24px;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-        .btn {
-            background: var(--primary);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 4px;
             text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .logo .gradient-text {
+            background: var(--gradient-brand);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav { display: flex; align-items: center; gap: 24px; }
+        nav a { text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 500; transition: color 0.2s; }
+        nav a:hover { color: var(--text-main); }
+
+        .btn-nav {
+            background: var(--text-main);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
             font-size: 14px;
-            font-weight: 500;
-            display: inline-block;
+            text-decoration: none;
+        }
+
+        /* --- Основной контент --- */
+        main { flex: 1; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding: 100px 0 80px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(40px, 5vw, 64px);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .hero p.subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 48px;
+            line-height: 1.6;
+        }
+
+        /* Декоративная градиентная линия под заголовком */
+        .hero-divider {
+            width: 60px;
+            height: 4px;
+            background: var(--gradient-brand);
+            border-radius: 2px;
+            margin: 0 auto 32px;
+        }
+
+        /* Поле ввода и кнопка */
+        .search-form {
+            display: flex;
+            max-width: 520px;
+            margin: 0 auto;
+            gap: 12px;
+            background: #fff;
+            padding: 8px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.3s;
+        }
+
+        .search-form:focus-within {
+            box-shadow: 0 4px 24px -4px rgba(255, 153, 19, 0.15);
+        }
+
+        .search-form input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 14px 16px;
+            font-size: 16px;
+            font-family: inherit;
+            border-radius: 8px;
+            background: transparent;
+        }
+
+        .btn-primary {
+            background: var(--text-main);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            font-family: inherit;
             transition: opacity 0.2s;
         }
-        .btn:hover { opacity: 0.8; }
-        .btn-outline {
-            background: transparent;
-            color: var(--text);
+
+        .btn-primary:hover { opacity: 0.85; }
+
+        .result-box {
+            margin-top: 24px;
+            font-size: 15px;
+            font-weight: 600;
+            min-height: 24px;
+        }
+
+        .result-success { color: var(--accent-green); }
+        .result-error { color: #ef4444; }
+
+        /* --- Блок "Как это работает" --- */
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 56px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 48px;
+            padding: 80px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .feature-step {
+            text-align: left;
+        }
+
+        .step-num {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-orange);
+            margin-bottom: 16px;
+            letter-spacing: 0.05em;
+        }
+
+        .feature-step h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .feature-step p {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* --- Тарифы --- */
+        .pricing {
+            padding: 80px 0 120px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .pricing-grid {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 56px;
+            flex-wrap: wrap;
+        }
+
+        .pricing-card {
             border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            width: 300px;
+            text-align: left;
+            background: #fff;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--text-main);
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-main);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .price {
+            font-size: 40px;
+            font-weight: 800;
+            margin: 16px 0 24px;
+        }
+
+        .price span { font-size: 16px; font-weight: 500; color: var(--text-muted); }
+
+        .pricing-card ul {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .pricing-card li {
+            font-size: 14px;
+            color: var(--text-muted);
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pricing-card li::before {
+            content: '✓';
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            transition: all 0.2s;
+        }
+
+        .btn-block:hover { background: #f8fafc; }
+        .btn-block.primary { background: var(--text-main); color: white; border-color: var(--text-main); }
+        .btn-block.primary:hover { opacity: 0.85; }
+
+        /* --- Футер --- */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 0;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* --- Адаптивность --- */
+        @media (max-width: 768px) {
+            .features-grid { grid-template-columns: 1fr; gap: 32px; }
+            .search-form { flex-direction: column; }
+            .hero h1 { font-size: 36px; }
+            nav a { display: none; }
+            .btn-nav { display: inline-block; }
         }
     </style>
 </head>
 <body>
+
+    <!-- Шапка -->
     <header>
-        <a href="/" class="logo">🛡️ UptimeGuard</a>
-        <div class="nav-links">
-            <a href="#">Тарифы</a>
-            <a href="#">Документация</a>
-            <a href="/dashboard" class="btn" style="padding: 8px 16px;">Войти</a>
-        </div>
+        <a href="/" class="logo">
+            Uptime<span class="gradient-text">Guard</span>
+        </a>
+        <nav>
+            <a href="#how-it-works">Как это работает</a>
+            <a href="#pricing">Тарифы</a>
+            <a href="/dashboard" class="btn-nav">Войти</a>
+        </nav>
     </header>
 
+    <!-- Основной контент -->
     <main>
-        {% block content %}{% endblock %}
+        <div class="container">
+            <!-- Hero -->
+            <section class="hero">
+                <div class="hero-divider"></div>
+                <h1>Узнайте о сбое<br>раньше клиентов</h1>
+                <p class="subtitle">
+                    Мониторинг доступности сайтов и SSL-сертификатов для бизнеса. Получайте алерты в Telegram, когда ваш сайт падает.
+                </p>
+
+                <!-- Форма проверки -->
+                <form action="/" method="POST" class="search-form">
+                    <input type="text" name="url" required autocomplete="off" placeholder="Введите адрес сайта (например, google.com)">
+                    <button type="submit" class="btn-primary">Проверить</button>
+                </form>
+
+                <!-- Результат -->
+                {% if result %}
+                <div class="result-box {% if 'доступен' in result %}result-success{% else %}result-error{% endif %}">
+                    {{ result }}
+                </div>
+                {% endif %}
+            </section>
+
+            <!-- Как это работает -->
+            <section id="how-it-works">
+                <h2 class="section-title">Как это работает</h2>
+                <div class="features-grid">
+                    <div class="feature-step">
+                        <div class="step-num">01</div>
+                        <h3>Добавьте сайт</h3>
+                        <p>Введите URL вашего сайта в личном кабинете и настройте интервал проверки.</p>
+                    </div>
+                    <div class="feature-step">
+                        <div class="step-num">02</div>
+                        <h3>Мы следим 24/7</h3>
+                        <p>Наша система автоматически проверяет ваш сайт каждую минуту и собирает статистику.</p>
+                    </div>
+                    <div class="feature-step">
+                        <div class="step-num">03</div>
+                        <h3>Получайте алерты</h3>
+                        <p>Если сайт упал — вы сразу получите уведомление в Telegram и сможете быстро среагировать.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Тарифы -->
+            <section id="pricing" class="pricing">
+                <h2 class="section-title">Простые тарифы</h2>
+                <div class="pricing-grid">
+                    <!-- Free -->
+                    <div class="pricing-card">
+                        <h3>Free</h3>
+                        <div class="price">0 <span>₽/мес</span></div>
+                        <ul>
+                            <li>1 сайт</li>
+                            <li>Проверка раз в 5 минут</li>
+                            <li>История за 24 часа</li>
+                        </ul>
+                        <a href="#" class="btn-block">Начать</a>
+                    </div>
+
+                    <!-- Pro -->
+                    <div class="pricing-card featured">
+                        <div class="badge">ПОПУЛЯРНЫЙ</div>
+                        <h3>Pro</h3>
+                        <div class="price">990 <span>₽/мес</span></div>
+                        <ul>
+                            <li>10 сайтов</li>
+                            <li>Проверка раз в минуту</li>
+                            <li>Алерты в Telegram</li>
+                            <li>История за 30 дней</li>
+                        </ul>
+                        <a href="#" class="btn-block primary">Подключить</a>
+                    </div>
+                </div>
+            </section>
+        </div>
     </main>
 
+    <!-- Футер -->
     <footer>
-        &copy; 2026 UptimeGuard. Мониторинг доступности сайтов для бизнеса.
+        <div class="container">
+            &copy; 2026 UptimeGuard. Мониторинг доступности сайтов для бизнеса.
+        </div>
     </footer>
+
 </body>
 </html>
