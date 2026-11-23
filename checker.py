@@ -1,5 +1,11 @@
-import os, psycopg2, requests, time, socket, ipaddress
+import ipaddress
+import os
+import socket
+import time
 from urllib.parse import urlparse
+
+import psycopg2
+import requests
 
 
 def get_db_connection():
@@ -81,11 +87,17 @@ def check_all():
             is_up = False
 
             try:
-                headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) UptimeGuard/1.0"}
+                headers = {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) UptimeGuard/1.0"
+                }
                 try:
-                    response = requests.get("https://" + url, timeout=10, headers=headers)
+                    response = requests.get(
+                        "https://" + url, timeout=10, headers=headers
+                    )
                 except requests.exceptions.RequestException:
-                    response = requests.get("http://" + url, timeout=10, headers=headers)
+                    response = requests.get(
+                        "http://" + url, timeout=10, headers=headers
+                    )
 
                 status_code = response.status_code
 
