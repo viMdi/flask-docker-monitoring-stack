@@ -24,5 +24,5 @@ BEGIN
         ADD CONSTRAINT uq_monitors_user_url
         UNIQUE (user_id, url);
 EXCEPTION
-    WHEN duplicate_object THEN NULL;
+    WHEN duplicate_object OR duplicate_table THEN NULL;
 END $$;
