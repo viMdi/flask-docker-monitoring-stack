@@ -1,8 +1,60 @@
-<form action="/login" method="POST">
-    <input type="hidden" name="next" value="{{ request.args.get('next', '') }}">
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>get200 — Вход</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #FAFAFA; --text: #1a1a1a; --text-muted: #737373; --border: #e5e5e5; --accent: #FF9913; --accent-dark: #8B4513; --gradient: linear-gradient(135deg, var(--accent), var(--accent-dark)); }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .nav { position: absolute; top: 20px; left: 20px; font-family: 'Fira Code', monospace; font-size: 14px; font-weight: 700; display: flex; align-items: center; }
+        .logo-text .get { color: var(--text-muted); font-weight: 500; }
+        .logo-text .code { color: var(--accent); }
+        .logo-text .ok { color: #10B981; }
+        .card { background: #ffffff; padding: 40px; border-radius: 12px; border: 1px solid var(--border); width: 100%; max-width: 400px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        h2 { margin-bottom: 24px; font-size: 24px; text-align: center; }
+        form { display: flex; flex-direction: column; gap: 16px; }
+        input { padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; background: var(--bg); }
+        input:focus { border-color: var(--accent); }
+        .btn-submit { background: var(--gradient); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; font-size: 15px; }
+        .btn-submit:hover { opacity: 0.9; }
+        .links { margin-top: 24px; text-align: center; font-size: 14px; display: flex; flex-direction: column; gap: 12px; }
+        .links a { color: var(--text-muted); text-decoration: none; }
+        .links a:hover { color: var(--accent-dark); }
+        .flash { padding: 12px; margin-bottom: 20px; border-radius: 8px; font-size: 14px; text-align: center; }
+        .flash-error { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .flash-success { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="/" style="text-decoration:none;" class="logo-text"><span class="get">GET / </span><span class="code">200</span><span class="ok">&nbsp;OK</span></a>
+    </div>
 
-    <input type="text" name="username" placeholder="Логин" required>
-    <input type="password" name="password" placeholder="Пароль" required>
-    <button type="submit">Войти</button>
-</form>
-<a href="/register">Нет аккаунта? Зарегистрироваться</a>
+    <div class="card">
+        <h2>Вход в систему</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {% if category == 'error' %}flash-error{% else %}flash-success{% endif %}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="/login" method="POST">
+            <input type="hidden" name="next" value="{{ request.args.get('next', '') }}">
+            <input type="text" name="username" placeholder="Логин" required autocomplete="off">
+            <input type="password" name="password" placeholder="Пароль" required>
+            <button type="submit" class="btn-submit">Войти</button>
+        </form>
+
+        <div class="links">
+            <span style="color: var(--text-muted);">Нет аккаунта? <a href="/register" style="color: var(--accent); font-weight: 500;">Зарегистрироваться</a></span>
+            <a href="/">← На главную</a>
+        </div>
+    </div>
+</body>
+</html>

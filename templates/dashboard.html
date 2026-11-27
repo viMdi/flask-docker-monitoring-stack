@@ -122,7 +122,8 @@
                                 </td>
                                 <td style="color: var(--text-muted);">{{ monitor[4].strftime('%d.%m.%Y %H:%M') if monitor[4] else 'Ожидает' }}</td>
                                 <td>
-                                    <form action="/delete_monitor/{{ monitor[0] }}" method="POST" style="display:inline;">
+                                    <form action="/delete_monitor/{{ monitor[0] }}" method="POST" style="display:inline;"
+                                            onsubmit="return confirm('Вы уверены, что хотите удалить этот монитор?');">
                                         <button type="submit" class="btn-delete" title="Удалить монитор">✕</button>
                                     </form>
                                 </td>
