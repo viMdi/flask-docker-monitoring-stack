@@ -1,4 +1,5 @@
 import os, psycopg2, requests
+from urllib.parse import urlparse
 from dotenv import load_dotenv
 from flask import Flask, flash, session, jsonify, redirect, render_template, request, url_for
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
@@ -162,6 +163,10 @@ def register():
 
         if not (6 <= len(password) <= 128):
             flash("Пароль должен быть от 6 до 128 символов.", "error")
+            return render_template("register.html")
+
+        if not (any(char.isalpha() for char in password) and any(char.isdigit() for char in password)):
+            flash("Пароль должен содержать хотя бы одну букву и одну цифру.", "error")
             return render_template("register.html")
 
         password_hash = generate_password_hash(password)
