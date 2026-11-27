@@ -59,6 +59,8 @@
         .flash-msg { padding: 12px; margin-bottom: 20px; border-radius: 8px; font-weight: 500; font-size: 14px; }
         .flash-error { background: rgba(239, 68, 68, 0.1); color: var(--error); border: 1px solid rgba(239, 68, 68, 0.2); }
         .flash-success { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
+        .btn-delete { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; cursor: pointer; transition: all 0.2s; }
+        .btn-delete:hover { background: rgba(239, 68, 68, 0.1); color: var(--error); border-color: var(--error); }
     </style>
 </head>
 <body>
@@ -66,6 +68,7 @@
         <a href="/" class="logo-text"><span class="get">GET / </span><span class="code">200</span><span class="ok">&nbsp;OK</span></a>
         <div class="nav-links">
             <a href="/"><span>&larr;</span> На главную</a>
+            <a href="/logout" style="color: var(--error); font-weight: 600;">Выйти</a>
         </div>
     </nav>
 
@@ -102,6 +105,7 @@
                             <th>Telegram ID</th>
                             <th>Статус</th>
                             <th>Последняя проверка</th>
+                            <th>Действие</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -117,6 +121,11 @@
                                     {% endif %}
                                 </td>
                                 <td style="color: var(--text-muted);">{{ monitor[4].strftime('%d.%m.%Y %H:%M') if monitor[4] else 'Ожидает' }}</td>
+                                <td>
+                                    <form action="/delete_monitor/{{ monitor[0] }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn-delete" title="Удалить монитор">✕</button>
+                                    </form>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
