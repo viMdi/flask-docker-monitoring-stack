@@ -1,5 +1,5 @@
 {
-	"files.autoSave": "afterDelay",
+	"files.autoSave": "onFocusChange",
 	"workbench.colorTheme": "One Dark Pro Monokai Darker",
 	"workbench.iconTheme": "material-icon-theme",
 	"material-icon-theme.hidesExplorerArrows": true,
@@ -18,18 +18,35 @@
 	"files.trimTrailingWhitespace": true,
 	"files.insertFinalNewline": true,
 
-	"ruff.lint.enable": true,
+	"files.watcherExclude": {
+		"**/.git/objects/**": true,
+		"**/.venv/**": true,
+		"**/__pycache__/**": true
+	},
+	"search.exclude": {
+		"**/.venv": true,
+		"**/__pycache__": true
+	},
+	"python.analysis.exclude": [
+		"**/.venv/**"
+	],
 
-  // внешка рабочей области
+	"ruff.lint.enable": true,
+	"ruff.lint.ignore": ["I001"],
+	"ruff.lineLength": 120,
+
+	// внешка рабочей области
 	"editor.glyphMargin": false,
 	"editor.scrollbar.horizontal": "hidden",
 	"editor.suggestSelection": "first",
 	"editor.minimap.enabled": false,
 	"editor.scrollbar.vertical": "hidden",
-	"editor.tabSize": 2,
+	"editor.tabSize": 4,
+	"editor.insertSpaces": true,
+	"editor.detectIndentation": false,
 	"editor.smoothScrolling": true,
 	"editor.formatOnSave": true,
-  "editor.defaultFormatter": "charliermarsh.ruff",
+	"editor.defaultFormatter": "charliermarsh.ruff",
 	"editor.fontSize": 14,
 	"editor.renderWhitespace": "none",
 	"editor.wordWrap": "off",
@@ -39,5 +56,15 @@
 	"editor.cursorSmoothCaretAnimation": "off",
 	"editor.lineHeight": 1.4,
 	"window.zoomLevel": 0.12,
-	"python.languageServer": "Pylance"
+	"python.languageServer": "Pylance",
+
+	"[python]": {
+		"editor.tabSize": 4,
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "charliermarsh.ruff",
+		"editor.codeActionsOnSave": {
+			"source.fixAll.ruff": "never",
+			"source.organizeImports": "never"
+		}
+	}
 }

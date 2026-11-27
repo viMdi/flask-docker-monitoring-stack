@@ -1,11 +1,7 @@
-import ipaddress
 import os
-import socket
 import time
-from urllib.parse import urlparse
-
 import psycopg2
-import requests
+from utils import is_safe_url, check_site_availability
 
 
 def get_db_connection():
@@ -17,32 +13,6 @@ def get_db_connection():
         port="5432",
         connect_timeout=3,
     )
-
-
-def is_safe_url(url):
-    if not url.startswith(("http://", "https://")):
-        url = "http://" + url
-
-    parsed = urlparse(url)
-    hostname = parsed.hostname
-
-    if not hostname:
-        return False, "Некорректный адрес сайта."
-
-    try:
-        ip_str = socket.gethostbyname(hostname)
-    except (socket.gaierror, UnicodeError):
-        return False, "Домен не найден. Проверьте правильность написания."
-
-    try:
-        ip_obj = ipaddress.ip_address(ip_str)
-    except ValueError:
-        return False, "Ошибка при обработке IP-адреса."
-
-    if ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_link_local:
-        return False, "Запросы к локальной сети запрещены из соображений безопасности."
-
-    return True, None
 
 
 def send_alert(url, status_code, chat_id):
@@ -70,45 +40,33 @@ def check_all():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(
-            "SELECT id, url, telegram_chat_id FROM monitors WHERE is_active = TRUE;"
-        )
+        cursor.execute("SELECT id, url, telegram_chat_id FROM monitors WHERE is_active = TRUE;")
         monitors = cursor.fetchall()
 
         for monitor in monitors:
             monitor_id, url, chat_id = monitor
 
-            is_safe, error_msg = is_safe_url(url)
+            is_safe, result_data = is_safe_url(url)
             if not is_safe:
-                print(f"[BLOCKED] {url} - {error_msg}")
+                print(f"[BLOCKED] {url} - {result_data}")
                 continue
 
+            checked_ip = result_data
             status_code = None
             is_up = False
 
-            try:
-                headers = {
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) UptimeGuard/1.0"
-                }
-                try:
-                    response = requests.get(
-                        "https://" + url, timeout=10, headers=headers
-                    )
-                except requests.exceptions.RequestException:
-                    response = requests.get(
-                        "http://" + url, timeout=10, headers=headers
-                    )
+            response, error_msg = check_site_availability(url, checked_ip)
 
+            if response:
                 status_code = response.status_code
-
-                if response.status_code < 400:
+                if status_code < 400:
                     is_up = True
                     print(f"[OK] {url} (Status: {status_code})")
                 else:
                     print(f"[DOWN] {url} (Status: {status_code})")
                     send_alert(url, status_code, chat_id)
-            except Exception as e:
-                print(f"[ERROR] {url} is unreachable: {e}")
+            else:
+                print(f"[ERROR] {url} is unreachable: {error_msg}")
                 send_alert(url, None, chat_id)
 
             cursor.execute(
